@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Search Engine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ask Me Anything</h1>
+            <p>Type a question below and get an intelligent response.</p>
+        </header>
+        
+        <main>
+            <form id="search-form">
+                <input type="text" id="question" placeholder="Enter your question here..." required>
+                <button type="submit">Ask</button>
+            </form>
+            <div id="response" class="response-box"></div>
+        </main>
+        
+        <footer>
+            <p>Powered by ChatGPT API</p>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#search-form').on('submit', function(event) {
+                event.preventDefault();
+                const question = $('#question').val();
+                $('#response').html("<p>Loading...</p>");
+                
+                $.post("/ask", { question: question }, function(data) {
+                    if (data.answer) {
+                        $('#response').html("<p>" + data.answer + "</p>");
+                    } else if (data.error) {
+                        $('#response').html("<p>Error: " + data.error + "</p>");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
